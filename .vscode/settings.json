@@ -1,6 +1,7 @@
 {
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
     "files.associations": {
-        "init.h": "c"
+        "init.h": "c",
+        "stm32f4xx_hal_i2s.h": "c"
     }
 }
