@@ -1,12 +1,10 @@
 #include "init.h"
+#include "main.h"
 #include "stm32f411xe.h"
 #include "stm32f4xx_hal_i2s.h"
 
 I2C_HandleTypeDef hi2c1;
-
-I2S_HandleTypeDef hi2s2;
 I2S_HandleTypeDef hi2s3;
-
 SPI_HandleTypeDef hspi1;
 
 /**
@@ -14,10 +12,14 @@ SPI_HandleTypeDef hspi1;
   * @param None
   * @retval None
   */
+/**
+  * @brief I2C1 Initialization Function
+  * @param None
+  * @retval None
+  */
 void MX_I2C1_Init(void)
 {
-
-  hi2c1.Instance = I2C1;
+    hi2c1.Instance = I2C1;
   hi2c1.Init.ClockSpeed = 100000;
   hi2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
   hi2c1.Init.OwnAddress1 = 0;
@@ -32,35 +34,6 @@ void MX_I2C1_Init(void)
   }
 }
 
-/**
-  * @brief I2S2 Initialization Function
-  * @param None
-  * @retval None
-  */
-void MX_I2S2_Init(void)
-{
-
-  /* USER CODE BEGIN I2S2_Init 0 */
-
-  /* USER CODE END I2S2_Init 0 */
-
-  /* USER CODE BEGIN I2S2_Init 1 */
-
-  /* USER CODE END I2S2_Init 1 */
-  hi2s2.Instance = SPI2;
-  hi2s2.Init.Mode = I2S_MODE_MASTER_TX;
-  hi2s2.Init.Standard = I2S_STANDARD_PHILIPS;
-  hi2s2.Init.DataFormat = I2S_DATAFORMAT_16B;
-  hi2s2.Init.MCLKOutput = I2S_MCLKOUTPUT_DISABLE;
-  hi2s2.Init.AudioFreq = I2S_AUDIOFREQ_96K;
-  hi2s2.Init.CPOL = I2S_CPOL_LOW;
-  hi2s2.Init.ClockSource = I2S_CLOCK_PLL;
-  hi2s2.Init.FullDuplexMode = I2S_FULLDUPLEXMODE_ENABLE;
-  if (HAL_I2S_Init(&hi2s2) != HAL_OK)
-  {
-    Error_Handler();
-  }
-}
 
 /**
   * @brief I2S3 Initialization Function
