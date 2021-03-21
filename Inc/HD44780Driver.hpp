@@ -20,5 +20,6 @@ public:
     void lcd_write_str(const char *text);
     void lcd_write_str(std::string &&text);
     void lcd_locate(uint8_t x, uint8_t y);
+    void lcd_clear();
 };
 } // namespace bsp

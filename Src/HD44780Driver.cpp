@@ -54,6 +54,7 @@ static void set_lcd_rs(PinState state)
 
 #define LCD_LINE1 0x00
 #define LCD_LINE2 0x40
+#define LCD_SIZE_X 0x0F
 
 void HD44780Driver::lcd_send_byte(uint8_t data)
 {
@@ -125,14 +126,28 @@ void HD44780Driver::lcd_write_str(std::string &&text)
 
 void HD44780Driver::lcd_locate(uint8_t x, uint8_t y)
 {
-	switch(y)
-	{
-		case 0:
-			lcd_write_cmd( LCDC_SET_DDRAM | (LCD_LINE1 + x) );
-			break;
-		case 1:
-			lcd_write_cmd( LCDC_SET_DDRAM | (LCD_LINE2 + x) );
-			break;
-	}
+    switch (y)
+    {
+    case 0:
+        lcd_write_cmd(LCDC_SET_DDRAM | (LCD_LINE1 + x));
+        break;
+    case 1:
+        lcd_write_cmd(LCDC_SET_DDRAM | (LCD_LINE2 + x));
+        break;
+    }
+}
+
+void HD44780Driver::lcd_clear()
+{
+    auto setByteToNull = [=]() {
+         for (std::size_t i = 0; i < LCD_SIZE_X; i++)
+         {
+             lcd_write_data(static_cast<uint8_t>(' '));
+         }
+    };
+    lcd_locate(1, 0);
+    setByteToNull();
+    lcd_locate(1, 1);
+    setByteToNull();
 }
 } // namespace bsp
