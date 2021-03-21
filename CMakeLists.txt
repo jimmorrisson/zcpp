@@ -53,6 +53,7 @@ set( SOURCES_ASM
     "Startup/startup_stm32f411vetx.s"
 )
 set( SOURCES_C
+"Src/CS43L22.c"
 "Src/init.c"
 "Src/stm32f4xx_hal_msp.c"
 "Src/stm32f4xx_it.c"
