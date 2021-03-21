@@ -1,4 +1,5 @@
 #include "HD44780Driver.hpp"
+#include "Viewer.hpp"
 
 namespace bsp
 {
@@ -26,30 +27,17 @@ static void set_lcd_rs(PinState state)
 #define LCD_D7_PIN GPIO_PIN_1
 
 #define LCD_CLEAR 0x01
-#define LCD_HOME 0x02
-#define LCDC_ENTRY_MODE 0x04
+#define LCD_ENTRY_MODE 0x04
 #define LCD_EM_SHIFT_CURSOR 0x00
-#define LCD_EM_SHIFT_DISPLAY 0x01
-#define LCD_EM_LEFT 0x00
 #define LCD_EM_RIGHT 0x02
 #define LCD_ONOFF 0x08
 #define LCD_DISP_ON 0x04
-#define LCD_CURSOR_ON 0x02
-#define LCDC_CURSOR_OFF 0x00
-#define LCDC_BLINK_ON 0x01
-#define LCDC_BLINK_OFF 0x00
 #define LCD_SHIFT 0x10
-#define LCDC_SHIFT_DISP 0x08
-#define LCDC_SHIFT_CURSOR 0x00
-#define LCDC_SHIFT_RIGHT 0x04
-#define LCDC_SHIFT_LEFT 0x00
 #define LCD_FUNC 0x20
 #define LCD_8_BIT 0x10
 #define LCD_4_BIT 0x00
 #define LCDC_TWO_LINE 0x08
-#define LCDC_FONT_5x10 0x04
 #define LCDC_FONT_5x7 0x00
-#define LCDC_SET_CGRAM 0x40
 #define LCDC_SET_DDRAM 0x80
 
 #define LCD_LINE1 0x00
@@ -93,7 +81,7 @@ void HD44780Driver::lcd_init()
     lcd_write_cmd(LCD_ONOFF | LCD_DISP_ON);
     lcd_write_cmd(LCD_CLEAR);
     HAL_Delay(5);
-    lcd_write_cmd(LCDC_ENTRY_MODE | LCD_EM_SHIFT_CURSOR | LCD_EM_RIGHT);
+    lcd_write_cmd(LCD_ENTRY_MODE | LCD_EM_SHIFT_CURSOR | LCD_EM_RIGHT);
 }
 
 void HD44780Driver::lcd_write_cmd(uint8_t cmd)
@@ -149,5 +137,15 @@ void HD44780Driver::lcd_clear()
     setByteToNull();
     lcd_locate(1, 1);
     setByteToNull();
+}
+
+void HD44780Driver::update(int signal) 
+{
+    lcd_clear();
+    const auto [first, second] = view::getSignals(signal);
+    lcd_locate(1, 0);
+    lcd_write_str(std::string{first});
+    lcd_locate(1, 1);
+    lcd_write_str(std::string{second});
 }
 } // namespace bsp

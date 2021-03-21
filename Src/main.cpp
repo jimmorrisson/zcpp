@@ -6,8 +6,7 @@ extern "C"
 }
 #include "HD44780Driver.hpp"
 #include "Button.hpp"
-#include <string>
-// #include "SystemManager.hpp"
+#include "SystemManager.hpp"
 
 void MX_USB_HOST_Process(void);
 
@@ -18,41 +17,20 @@ void MX_USB_HOST_Process(void);
 int main(int argc, char *argv[])
 {
     init_system();
-    // SystemManager systemManager;
-    bsp::HD44780Driver hd44780Driver;
+    SystemManager systemManager;
+    bsp::HD44780Driver hd44780Driver{systemManager};
     hd44780Driver.lcd_init();
     hd44780Driver.lcd_write_cmd(0x80);
     hd44780Driver.lcd_write_data(0x3E);
-    hd44780Driver.lcd_locate(1, 0);
-    hd44780Driver.lcd_write_str(std::string("sinus"));
-    hd44780Driver.lcd_locate(1, 1);
-    hd44780Driver.lcd_write_str(std::string("prostokat"));
-    // bsp::Button button{systemManager};
+    bsp::Button button;
     while (1)
     {
-        hd44780Driver.lcd_clear();
         MX_USB_HOST_Process();
         const auto btnState = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0);
-        // button.setState(btnState);
-        // auto [first, second] = button.getSingal();
-        hd44780Driver.lcd_locate(1, 0);
-        // hd44780Driver.lcd_write_str(std::move(first));
-        hd44780Driver.lcd_locate(1, 1);
-        // hd44780Driver.lcd_write_str(std::move(second));
-        // systemManager.handleSignalChanged(1);
-
-
-        //        if ( == 1 && previousState == 0)
-        //        {
-        //            HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, set ?GPIO_PIN_SET : GPIO_PIN_RESET);
-        //            set = !set;
-        //            previousState = 1;
-        //        }
-        //        else
-        //        {
-        //            previousState = 0;
-        //        }
-        HAL_Delay(1000);
+        button.setState(btnState);
+        const auto btnSignal = button.getSingal();
+        const auto state = SystemManager::translateButtonState(btnSignal);
+        systemManager.handleSignalChanged(state);
     }
 }
 

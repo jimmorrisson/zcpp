@@ -49,7 +49,30 @@ include_directories(Inc Drivers/CMSIS/Include Drivers/STM32F4xx_HAL_Driver/Inc D
 
 add_definitions(-DUSE_HAL_DRIVER -DSTM32F411xE -DDEBUG)
 
-file(GLOB_RECURSE SOURCES "Startup/*.*" "Src/*.*" "Middlewares/*.*" "Drivers/*.*")
+set( SOURCES_ASM
+    "Startup/startup_stm32f411vetx.s"
+)
+set( SOURCES_C
+"Src/init.c"
+"Src/stm32f4xx_hal_msp.c"
+"Src/stm32f4xx_it.c"
+"Src/syscalls.c"
+"Src/sysmem.c"
+"Src/system_stm32f4xx.c"
+"Src/usb_host.c"
+"Src/usbh_conf.c"
+"Src/usbh_platform.c"
+)
+
+set(SOURCES_CXX
+"Src/main.cpp"
+"Src/Button.cpp"
+"Src/HD44780Driver.cpp"
+"Src/SystemManager.cpp"
+"Src/Viewer.cpp"
+)
+
+file(GLOB_RECURSE SOURCES "Middlewares/*.*" "Drivers/*.*")
 
 set(LINKER_SCRIPT ${CMAKE_SOURCE_DIR}/STM32F411VETX_FLASH.ld)
 
@@ -57,7 +80,7 @@ add_link_options(-Wl,-gc-sections,--print-memory-usage,-Map=${PROJECT_BINARY_DIR
 add_link_options(-mcpu=cortex-m4 -mthumb -mthumb-interwork)
 add_link_options(-T ${LINKER_SCRIPT})
 
-add_executable(${PROJECT_NAME}.elf ${SOURCES} ${LINKER_SCRIPT})
+add_executable(${PROJECT_NAME}.elf ${SOURCES_ASM} ${SOURCES_C} ${SOURCES_CXX} ${SOURCES} ${LINKER_SCRIPT})
 
 set(HEX_FILE ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.hex)
 set(BIN_FILE ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.bin)

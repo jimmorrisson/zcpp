@@ -1,14 +1,11 @@
 #pragma once
 #include "main.h"
 #include "stm32f4xx_hal_gpio.h"
-#include "Observer.hpp"
-#include "Subject.hpp"
 #include <string>
-#include <utility>
 
 namespace bsp
 {
-class Button : public Observer
+class Button
 {
 public:
     enum class State
@@ -24,80 +21,17 @@ public:
         Sawtooth
     };
 
-    explicit Button(Subject &subject, State state = State::Off) : subject{subject}, state{state}, currentSignals{std::make_pair(Signal::Sine, Signal::Rectangle)}
+    explicit Button(State state = State::Off) : state{state}, currentSignal{Signal::Sine}
     {
-        subject.attach(this);
     }
 
-    void setState(GPIO_PinState gpioPinState) noexcept
-    {
-        if (state == State::Off && gpioPinState == GPIO_PIN_SET)
-        {
-            state = State::On;
-            updateUpdateSingals();
-        }
-        else if (state == State::On && gpioPinState == GPIO_PIN_RESET)
-        {
-            state = State::Off;
-        }
-    }
-    [[nodiscard]] std::pair<std::string, std::string> getSingal() const
-    {
-        const auto &[first, second] = currentSignals;
-        switch (first)
-        {
-        case Signal::Sine:
-        {
-            return {"Sinus", "Prostokat"};
-        }
-        case Signal::Rectangle:
-        {
-            return {"Prostokat", "Pila"};
-        }
-        case Signal::Sawtooth:
-        {
-            return {"Pila", ""};
-        }
-        }
-        return {"", ""};
-    }
-
-    [[nodiscard]] int getButtonPosition()
-    {
-        return 1;
-    }
+    void setState(GPIO_PinState gpioPinState) noexcept;
+    [[nodiscard]] Signal getSingal() const;
 
 private:
-    Subject &subject;
     State state;
-    std::pair<Signal, Signal> currentSignals;
+    Signal currentSignal;
 
-    void update(int signal) override
-    {
-        int a = signal;
-    }
-
-    void updateUpdateSingals() noexcept
-    {
-        const auto &[first, second] = currentSignals;
-        switch (first)
-        {
-        case Signal::Sine:
-        {
-            currentSignals = std::make_pair(Signal::Rectangle, Signal::Sawtooth);
-            break;
-        }
-        case Signal::Rectangle:
-        {
-            currentSignals = std::make_pair(Signal::Sawtooth, Signal::Sine);
-            break;
-        }
-        case Signal::Sawtooth:
-        {
-            currentSignals = std::make_pair(Signal::Sine, Signal::Rectangle);
-            break;
-        }
-        }
-    }
+    void updateUpdateSingals() noexcept;
 };
 } // namespace bsp

@@ -1,5 +1,5 @@
 #pragma once
-#include "main.h"
+#include "Button.hpp"
 #include "Subject.hpp"
 #include <list>
 
@@ -17,5 +17,5 @@ public:
     void detach(Observer *observer) override;
     void notifyChange() override;
 
-    static int translateButtonState(int buttonPosition);
+    static int translateButtonState(const bsp::Button::Signal signal);
 };

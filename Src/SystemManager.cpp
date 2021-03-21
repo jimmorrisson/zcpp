@@ -37,7 +37,20 @@ void SystemManager::notifyChange()
     }
 }
 
-int SystemManager::translateButtonState(int buttonPosition)
+int SystemManager::translateButtonState(const bsp::Button::Signal signal)
 {
-    return 1;
+    using Signal = bsp::Button::Signal;
+    switch (signal)
+    {
+    case Signal::Sine:
+        return 0;
+        break;
+    case Signal::Rectangle:
+        return 1;
+        break;
+    case Signal::Sawtooth:
+        return 2;
+        break;
+    }
+    return 0;
 }
