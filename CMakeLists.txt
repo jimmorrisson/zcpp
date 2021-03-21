@@ -1,7 +1,9 @@
+#THIS FILE IS AUTO GENERATED FROM THE TEMPLATE! DO NOT CHANGE!
 set(CMAKE_SYSTEM_NAME Generic)
 set(CMAKE_SYSTEM_VERSION 1)
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.17)
 
+# specify cross compilers and tools
 set(CMAKE_C_COMPILER arm-none-eabi-gcc)
 set(CMAKE_CXX_COMPILER arm-none-eabi-g++)
 set(CMAKE_ASM_COMPILER  arm-none-eabi-gcc)
@@ -11,7 +13,8 @@ set(CMAKE_OBJDUMP arm-none-eabi-objdump)
 set(SIZE arm-none-eabi-size)
 set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 
-project(DiscoveryBlinky C CXX ASM)
+# project settings
+project(zcpp C CXX ASM)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_C_STANDARD 11)
 
@@ -21,15 +24,13 @@ set(CMAKE_C_STANDARD 11)
 #add_link_options(-mfloat-abi=hard -mfpu=fpv4-sp-d16)
 
 #Uncomment for software floating point
-# add_compile_options(-mfloat-abi=soft)
+#add_compile_options(-mfloat-abi=soft)
 
-add_compile_options(-Wall -Wextra -Wpedantic)
 add_compile_options(-mcpu=cortex-m4 -mthumb -mthumb-interwork)
 add_compile_options(-ffunction-sections -fdata-sections -fno-common -fmessage-length=0)
-add_compile_options(-O0)
 
 # uncomment to mitigate c++17 absolute addresses warnings
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-register")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-register")
 
 if ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
     message(STATUS "Maximum optimization for speed")
@@ -45,24 +46,22 @@ else ()
     add_compile_options(-Og -g)
 endif ()
 
-include_directories(Inc Drivers/CMSIS/Include Drivers/STM32F4xx_HAL_Driver/Inc Drivers/CMSIS/Device/ST/STM32F4xx/Include Drivers/STM32F4xx_HAL_Driver/Inc/Legacy Middlewares/ST/STM32_USB_Host_Library/Core/Inc Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Inc)
+include_directories(Inc Drivers/CMSIS/Include Drivers/STM32F4xx_HAL_Driver/Inc Drivers/CMSIS/Device/ST/STM32F4xx/Include Drivers/STM32F4xx_HAL_Driver/Inc/Legacy)
 
-add_definitions(-DUSE_HAL_DRIVER -DSTM32F411xE -DDEBUG)
+add_definitions(-DUSE_HAL_DRIVER -DDEBUG -DSTM32F407xx)
 
 set( SOURCES_ASM
-    "Startup/startup_stm32f411vetx.s"
+    "Startup/startup_stm32f407vgtx.s"
 )
 set( SOURCES_C
 "Src/CS43L22.c"
+#"Src/main.c"
 "Src/init.c"
 "Src/stm32f4xx_hal_msp.c"
 "Src/stm32f4xx_it.c"
 "Src/syscalls.c"
 "Src/sysmem.c"
 "Src/system_stm32f4xx.c"
-"Src/usb_host.c"
-"Src/usbh_conf.c"
-"Src/usbh_platform.c"
 )
 
 set(SOURCES_CXX
@@ -73,9 +72,9 @@ set(SOURCES_CXX
 "Src/Viewer.cpp"
 )
 
-file(GLOB_RECURSE SOURCES "Middlewares/*.*" "Drivers/*.*")
+file(GLOB_RECURSE SOURCES "Drivers/*.*")
 
-set(LINKER_SCRIPT ${CMAKE_SOURCE_DIR}/STM32F411VETX_FLASH.ld)
+set(LINKER_SCRIPT ${CMAKE_SOURCE_DIR}/STM32F407VGTX_FLASH.ld)
 
 add_link_options(-Wl,-gc-sections,--print-memory-usage,-Map=${PROJECT_BINARY_DIR}/${PROJECT_NAME}.map)
 add_link_options(-mcpu=cortex-m4 -mthumb -mthumb-interwork)
@@ -91,28 +90,3 @@ add_custom_command(TARGET ${PROJECT_NAME}.elf POST_BUILD
         COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${PROJECT_NAME}.elf> ${BIN_FILE}
         COMMENT "Building ${HEX_FILE}
 Building ${BIN_FILE}")
-
-# supress warning for external code
-# set_source_files_properties(
-#     "${CMAKE_CURRENT_DIR}/Src/syscalls.c"
-#     PROPERTIES COMPILE_FLAGS
-#     "-Wno-pedantic -Wno-unused-variable"
-# )
-
-# set_source_files_properties(
-#     "${CMAKE_CURRENT_DIR}/Src/usb_host.c"
-#     PROPERTIES COMPILE_FLAGS
-#     "-Wno-pedantic -Wno-unused-variable"
-# )
-
-# set_source_files_properties(
-#     "${CMAKE_CURRENT_DIR}/Src/usb_conf.c"
-#     PROPERTIES COMPILE_FLAGS
-#     "-Wno-pedantic -Wno-unused-variable"
-# )
-
-# set_source_files_properties(
-#     "${CMAKE_CURRENT_DIR}/Drivers/STM32F4xx_Hal_Driver/Src/stm32f4xx_hal_exti.c"
-#     PROPERTIES COMPILE_FLAGS
-#     "-Wno-pedantic -Wno-unused-variable"
-# )

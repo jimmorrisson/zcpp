@@ -1,9 +1,7 @@
 #pragma once
-
-#include "main.h"
 #include "stm32f4xx_hal.h"
 
-
+//(2): List of all the defines
 #define POWER_CONTROL1					0x02
 #define POWER_CONTROL2					0x04
 #define CLOCKING_CONTROL 	  		0x05
@@ -53,4 +51,3 @@ void CS43_Enable_RightLeft(uint8_t side);
 void CS43_SetVolume(uint8_t volume);
 void CS43_Start(void);
 void CS43_Stop(void);
-

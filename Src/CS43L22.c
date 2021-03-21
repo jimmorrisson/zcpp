@@ -182,8 +182,7 @@ void CS43_Start(void)
 	write_register(POWER_CONTROL1,&iData[1]);
 }
 
-void CS43_Stop(void)
-{
-	iData[1] = 0x01;
-	write_register(POWER_CONTROL1,&iData[1]);
+void CS43_Stop(void) {
+    iData[1] = 0x01;
+    write_register(POWER_CONTROL1, &iData[1]);
 }
