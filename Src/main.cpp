@@ -17,13 +17,25 @@ void MX_USB_HOST_Process(void);
 int main(int argc, char *argv[])
 {
     init_system();
-    HD44780Driver hd44780Driver;
+    bsp::HD44780Driver hd44780Driver;
     hd44780Driver.lcd_init();
     hd44780Driver.lcd_write_cmd(0x80);
-    hd44780Driver.lcd_write_str(std::string("zcpp"));
+    hd44780Driver.lcd_write_data(0x3E);
+    hd44780Driver.lcd_locate(1, 0);
+    hd44780Driver.lcd_write_str(std::string("sinus"));
+    hd44780Driver.lcd_locate(1, 1);
+    hd44780Driver.lcd_write_str(std::string("prostokat"));
     while (1)
     {
         MX_USB_HOST_Process();
+        if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == 1)
+        {
+            HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_SET);
+        }
+        else
+        {
+            HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_RESET);
+        }
     }
 }
 
