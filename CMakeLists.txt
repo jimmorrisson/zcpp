@@ -55,7 +55,6 @@ set( SOURCES_ASM
 )
 set( SOURCES_C
 "Src/CS43L22.c"
-#"Src/main.c"
 "Src/init.c"
 "Src/stm32f4xx_hal_msp.c"
 "Src/stm32f4xx_it.c"
