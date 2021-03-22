@@ -15,7 +15,7 @@ AudioPlayer::AudioPlayer(Subject &subject, std::array<int16_t, 100> &&arr) : sig
 {
     subject.attach(this);
     CS43_Init(hi2c1, MODE_I2S);
-    CS43_SetVolume(40); //0 - 100,, 40
+    CS43_SetVolume(40); 
     CS43_Enable_RightLeft(CS43_RIGHT_LEFT);
     CS43_Start();
 

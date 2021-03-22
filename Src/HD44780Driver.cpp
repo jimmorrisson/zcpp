@@ -138,14 +138,4 @@ void HD44780Driver::lcd_clear()
     lcd_locate(1, 1);
     setByteToNull();
 }
-
-void HD44780Driver::update(int signal) 
-{
-    lcd_clear();
-    const auto [first, second] = view::getSignals(signal);
-    lcd_locate(1, 0);
-    lcd_write_str(std::string{first});
-    lcd_locate(1, 1);
-    lcd_write_str(std::string{second});
-}
 } // namespace bsp

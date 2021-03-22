@@ -6,21 +6,14 @@ extern "C"
 #include "init.h"
 #include "CS43L22.h"
 }
-#include "HD44780Driver.hpp"
-#include "Button.hpp"
-#include "SystemManager.hpp"
-#include "Sine.hpp"
-#include "Rectangular.hpp"
-#include "Sawtooth.hpp"
 #include "AudioPlayer.hpp"
+#include "Button.hpp"
+#include "Display.hpp"
+#include "SystemManager.hpp"
 I2C_HandleTypeDef hi2c1;
 
 I2S_HandleTypeDef hi2s3;
 DMA_HandleTypeDef hdma_spi3_tx;
-
-#define PI 3.14159f
-#define F_SAMPLE 48000.0f
-#define F_OUT 1500.0f
 
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
@@ -28,41 +21,18 @@ static void MX_DMA_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_I2S3_Init(void);
 
-float mySinVal;
-float sample_dt;
-uint16_t sample_N;
-uint16_t i_t;
-
-uint32_t myDacVal;
-
-int16_t dataI2S[100];
-
 int main(void)
 {
-  sample_dt = F_OUT / F_SAMPLE;
-  sample_N = F_SAMPLE / F_OUT;
-
   HAL_Init();
-
-  /* Configure the system clock */
   SystemClock_Config();
-
-  /* USER CODE BEGIN SysInit */
-
-  /* USER CODE END SysInit */
-
-  /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_DMA_Init();
   MX_I2C1_Init();
   MX_I2S3_Init();
   SystemManager systemManager;
-  bsp::HD44780Driver hd44780Driver{systemManager};
+  Display display{systemManager};
   std::array<int16_t, 100> data;
   AudioPlayer audioPlayer{systemManager, std::move(data)};
-  hd44780Driver.lcd_init();
-  hd44780Driver.lcd_write_cmd(0x80);
-  hd44780Driver.lcd_write_data(0x3E);
   bsp::Button button;
   while (1)
   {

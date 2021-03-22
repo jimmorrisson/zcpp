@@ -66,6 +66,7 @@ set( SOURCES_C
 set(SOURCES_CXX
 "Src/main.cpp"
 "Src/Button.cpp"
+"Src/Display.cpp"
 "Src/HD44780Driver.cpp"
 "Src/AudioPlayer.cpp"
 "Src/SystemManager.cpp"
