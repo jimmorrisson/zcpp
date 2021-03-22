@@ -23,4 +23,9 @@ public:
     {
         return data.data();
     }
+
+    [[nodiscard]] constexpr auto getSampleN() const noexcept
+    {
+        return sampleN;
+    }
 };

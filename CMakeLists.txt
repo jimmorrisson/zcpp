@@ -67,6 +67,7 @@ set(SOURCES_CXX
 "Src/main.cpp"
 "Src/Button.cpp"
 "Src/HD44780Driver.cpp"
+"Src/AudioPlayer.cpp"
 "Src/SystemManager.cpp"
 "Src/Viewer.cpp"
 )
