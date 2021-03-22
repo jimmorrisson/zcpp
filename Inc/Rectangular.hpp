@@ -2,20 +2,21 @@
 #include "Signal.hpp"
 #include <math.h>
 
-class Rectangular : public Signal
+template <size_t size>
+class Rectangular : public Signal<size>
 {
 public:
-    explicit constexpr Rectangular(std::array<int16_t, arrSize> &&data) : Signal{std::move(data)}
+    explicit constexpr Rectangular(std::array<int16_t, size> &&data) : Signal<size>{std::move(data)}
     {
         constexpr auto maxValue = 8000;
-        for (uint16_t i = 0; i < sampleN; i++)
+        for (uint16_t i = 0; i < this->sampleN; i++)
         {
-            if (i < (sampleN / 4))
+            if (i < (this->sampleN / 4))
             {
                 data.at(i * 2) = maxValue;
                 data.at(i * 2 + 1) = maxValue;
             }
-            else if (i < ((sample / 4) * 3) && i >= ((sample / 4) * 2))
+            else if (i < ((this->sample / 4) * 3) && i >= ((this->sample / 4) * 2))
             {
                 data.at(i * 2) = -maxValue;
                 data.at(i * 2 + 1) = -maxValue;

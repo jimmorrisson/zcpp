@@ -3,10 +3,12 @@
 #include "Subject.hpp"
 #include <list>
 
+namespace sys
+{
 class SystemManager : public Subject
 {
 private:
-    std::list<Observer*> observerList;
+    std::list<Observer *> observerList;
     int currentSignal = 0;
     void setSignal(int signal) noexcept;
     bool changeSignal(int signal) noexcept;
@@ -19,3 +21,4 @@ public:
 
     static int translateButtonState(const bsp::Button::Signal signal);
 };
+} // namespace sys

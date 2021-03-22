@@ -1,5 +1,4 @@
 #include "main.h"
-#include <math.h>
 
 extern "C"
 {
@@ -29,17 +28,18 @@ int main(void)
   MX_DMA_Init();
   MX_I2C1_Init();
   MX_I2S3_Init();
-  SystemManager systemManager;
+  sys::SystemManager systemManager;
   Display display{systemManager};
-  std::array<int16_t, 100> data;
-  AudioPlayer audioPlayer{systemManager, std::move(data)};
+  constexpr size_t size = 100;
+  std::array<int16_t, size> data;
+  audio::AudioPlayer<size> audioPlayer{systemManager, std::move(data)};
   bsp::Button button;
   while (1)
   {
     const auto btnState = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0);
     button.setState(btnState);
     const auto btnSignal = button.getSingal();
-    const auto state = SystemManager::translateButtonState(btnSignal);
+    const auto state = sys::SystemManager::translateButtonState(btnSignal);
     systemManager.handleSignalChanged(state);
   }
 }

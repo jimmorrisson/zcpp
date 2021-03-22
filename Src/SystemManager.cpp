@@ -1,6 +1,8 @@
 #include "SystemManager.hpp"
 #include <utility>
 
+namespace sys
+{
 void SystemManager::setSignal(int signal) noexcept
 {
     if (const auto changed = changeSignal(signal); changed)
@@ -54,3 +56,4 @@ int SystemManager::translateButtonState(const bsp::Button::Signal signal)
     }
     return 0;
 }
+} // namespace sys

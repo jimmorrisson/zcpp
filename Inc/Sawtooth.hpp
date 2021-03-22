@@ -2,17 +2,18 @@
 #include "Signal.hpp"
 #include <math.h>
 
-class Sawtooth : public Signal
+template <size_t size>
+class Sawtooth : public Signal<size>
 {
 public:
-    explicit constexpr Sawtooth(std::array<int16_t, arrSize> &&data) : Signal{std::move(data)}
+    explicit constexpr Sawtooth(std::array<int16_t, size> &&data) : Signal<size>{std::move(data)}
     {
         auto b = -1.0;
-        double d = 2.0 / sampleN;
+        double d = 2.0 / this->sampleN;
         constexpr auto scaler = 8000;
-        for (uint16_t i = 0; i < sampleN; i++)
+        for (uint16_t i = 0; i < this->sampleN; i++)
         {
-            if (i % sampleN)
+            if (i % this->sampleN)
             {
                 b += 2.0;
             }
