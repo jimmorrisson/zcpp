@@ -60,15 +60,39 @@ extern "C"
  	CS43_Start();
 
  	//Build Sine wave
- 	for(uint16_t i=0; i<sample_N; i++)
- 	{
- 		mySinVal = sinf(i*2*PI*sample_dt);
- 		dataI2S[i*2] = (mySinVal )*8000;    //Right data (0 2 4 6 8 10 12)
- 		dataI2S[i*2 + 1] =(mySinVal )*8000; //Left data  (1 3 5 7 9 11 13)
- 	}
+ 	for(uint16_t i=0; i<sample_N; i++) {
+        mySinVal = sinf(i * 2 * PI * sample_dt);
+        dataI2S[i * 2] = (mySinVal) * 8000;    //Right data (0 2 4 6 8 10 12)
+        dataI2S[i * 2 + 1] = (mySinVal) * 8000; //Left data  (1 3 5 7 9 11 13)
+    }
 
  	HAL_I2S_Transmit_DMA(&hi2s3, (uint16_t *)dataI2S, sample_N*2);
 
+ 	HAL_I2S_DMAPause(&hi2s3);
+ 	for(uint16_t i=0; i<sample_N; i++)
+    {
+ 	    if (i < 8) {
+ 		dataI2S[i*2] = 8000;    //Right data (0 2 4 6 8 10 12)
+ 		dataI2S[i*2 + 1] = 8000; //Left data  (1 3 5 7 9 11 13)
+ 	    }
+ 	    else if (i < 16 && i >= 8) {
+ 	        dataI2S[i*2] = 0;    //Right data (0 2 4 6 8 10 12)
+ 		    dataI2S[i*2 + 1] = 0; //Left data  (1 3 5 7 9 11 13)
+ 	    }
+ 	    else if (i < 24 && i >= 16) {
+ 		dataI2S[i*2] = -8000;    //Right data (0 2 4 6 8 10 12)
+ 		dataI2S[i*2 + 1] = -8000; //Left data  (1 3 5 7 9 11 13)
+ 	    }
+ 	    else {
+ 	       	        dataI2S[i*2] = 0;    //Right data (0 2 4 6 8 10 12)
+ 		    dataI2S[i*2 + 1] = 0; //Left data  (1 3 5 7 9 11 13)
+
+ 	    }
+ 	}
+ 	HAL_I2S_Transmit_DMA(&hi2s3, (uint16_t *)dataI2S, sample_N*2);
+ 	HAL_I2S_DMAResume(&hi2s3);
+// 	int a[4] = {0};
+// 	HAL_I2S_Transmit_DMA(&hi2s3, (uint16_t *)a, 4);
     SystemManager systemManager;
     bsp::HD44780Driver hd44780Driver{systemManager};
     hd44780Driver.lcd_init();
