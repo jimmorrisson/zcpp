@@ -18,7 +18,7 @@ extern "C"
 
 namespace audio
 {
-template <size_t size>
+template <std::size_t size>
 class AudioPlayer : public Observer
 {
 private:
@@ -33,11 +33,14 @@ public:
         CS43_Enable_RightLeft(CS43_RIGHT_LEFT);
         CS43_Start();
 
+        HAL_I2S_DMAStop(&hi2s3);
+        HAL_I2S_DeInit(&hi2s3);
+        HAL_I2S_Init(&hi2s3);
         HAL_I2S_Transmit_DMA(&hi2s3, (uint16_t *)(signal->getData()), signal->getSampleN() * 2);
     }
     void update(int signal) override
     {
-        std::array<int16_t, 100> data;
+        std::array<int16_t, size> data;
         switch (signal)
         {
         case 1:

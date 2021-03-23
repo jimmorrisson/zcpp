@@ -2,7 +2,7 @@
 #include "Signal.hpp"
 #include <math.h>
 
-template <size_t size>
+template <std::size_t size>
 class Sawtooth : public Signal<size>
 {
 public:
