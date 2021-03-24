@@ -15,10 +15,6 @@ protected:
 public:
     virtual ~Signal() = default;
 
-    explicit constexpr Signal(std::array<int16_t, size> &&data) : data{data}
-    {
-    }
-
     [[nodiscard]] auto getData() const noexcept
     {
         return data.data();

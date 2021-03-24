@@ -1,4 +1,4 @@
-file "./build/DiscoveryBlinky.elf"
+file "./build/zcpp.elf"
 
 # Connect to texane stlink gdb server
 target extended-remote :4242

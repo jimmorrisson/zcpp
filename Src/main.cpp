@@ -20,8 +20,7 @@ int main([[maybe_unused]]int argc, [[maybe_unused]]char* argv[])
   sys::SystemManager systemManager;
   Display display{systemManager};
   constexpr std::size_t size = 100;
-  std::array<int16_t, size> data;
-  audio::AudioPlayer<size> audioPlayer{systemManager, std::move(data)};
+  audio::AudioPlayer<size> audioPlayer{systemManager};
   bsp::Button button;
   while (1)
   {

@@ -25,7 +25,7 @@ private:
     std::unique_ptr<Signal<size>> signal;
 
 public:
-    explicit AudioPlayer(Subject &subject, std::array<int16_t, size> &&arr) : signal{std::make_unique<Sine<size>>(std::move(arr))}
+    explicit AudioPlayer(Subject &subject) : signal{std::make_unique<Sine<size>>()}
     {
         subject.attach(this);
         CS43_Init(hi2c1, MODE_I2S);
@@ -40,22 +40,21 @@ public:
     }
     void update(int signal) override
     {
-        std::array<int16_t, size> data;
         switch (signal)
         {
         case 1:
         {
-            this->signal = std::make_unique<Sine<size>>(std::move(data));
+            this->signal = std::make_unique<Sine<size>>();
             break;
         }
         case 2:
         {
-            this->signal = std::make_unique<Rectangular<size>>(std::move(data));
+            this->signal = std::make_unique<Rectangular<size>>();
             break;
         }
         case 3:
         {
-            this->signal = std::make_unique<Sawtooth<size>>(std::move(data));
+            this->signal = std::make_unique<Sawtooth<size>>();
             break;
         }
         }
